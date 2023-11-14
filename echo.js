@@ -4,6 +4,7 @@ class EchoBot {
   constructor(baseUrl) {
     this.baseUrl = baseUrl;
     this.socket = null;
+    this.botSession = null;
   }
 
   async connect() {
@@ -14,6 +15,17 @@ class EchoBot {
         console.log("[bot.socket.open]");
 
         try {
+          this.socket.send(
+            JSON.stringify({
+              request: {
+                user_login: {
+                  login: process.env.ECHO_LOGIN_KEY,
+                  password: process.env.ECHO_PASSWORD_KEY,
+                  deviceId: "EchoBot_device",
+                },
+              },
+            })
+          );
         } catch (error) {
           console.log("[bot.socket.error]", error);
         }
@@ -24,6 +36,28 @@ class EchoBot {
       this.socket.onmessage = (e) => {
         const message = JSON.parse(e.data);
         console.log("[bot.socket.message]", message);
+
+        if (message.message) {
+          const { body, cid } = message.message;
+          setTimeout(
+            () =>
+              this.socket.send(
+                JSON.stringify({
+                  message: {
+                    id: this.botSession.user._id + Date.now(),
+                    body,
+                    cid,
+                  },
+                })
+              ),
+            3000
+          );
+          return;
+        }
+
+        if (message.response?.user) {
+          this.botSession = message.response;
+        }
       };
 
       this.socket.onerror = (error) => {
