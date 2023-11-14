@@ -38,11 +38,20 @@ class EchoBot {
         console.log("[bot.socket.message]", message);
 
         if (message.message) {
-          const { body, cid, attachments } = message.message;
-          const mid = this.botSession.user._id + Date.now();
+          const botId = this.botSession.user._id;
+          const { _id, body, cid, attachments } = message.message;
+          this.socket.send(
+            JSON.stringify({
+              request: {
+                message_read: { cid },
+                id: "echoBot:markConversationAsRead",
+              },
+            })
+          );
+
           const messageToSend = {
             message: {
-              id: mid,
+              id: botId + Date.now(),
               cid,
               body: body ? "Echo: " + body : "",
               attachments,
