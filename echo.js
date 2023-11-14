@@ -38,18 +38,19 @@ class EchoBot {
         console.log("[bot.socket.message]", message);
 
         if (message.message) {
-          const { body, cid } = message.message;
+          const { body, cid, attachments } = message.message;
+          const mid = this.botSession.user._id + Date.now();
+          const messageToSend = {
+            message: {
+              id: mid,
+              cid,
+              body: body ? "Echo: " + body : "",
+              attachments,
+            },
+          };
+
           setTimeout(
-            () =>
-              this.socket.send(
-                JSON.stringify({
-                  message: {
-                    id: this.botSession.user._id + Date.now(),
-                    body,
-                    cid,
-                  },
-                })
-              ),
+            () => this.socket.send(JSON.stringify(messageToSend)),
             3000
           );
           return;
