@@ -1,0 +1,16 @@
+{
+  "name": "sama-chat-bots",
+  "version": "0.0.1",
+  "description": "",
+  "license": "Apache-2.0",
+  "main": "echo.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon -r dotenv/config echo.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "nodemon": "^3.0.1",
+    "ws": "^8.14.2"
+  }
+}
