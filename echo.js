@@ -19,8 +19,8 @@ class EchoBot {
             JSON.stringify({
               request: {
                 user_login: {
-                  login: process.env.ECHO_LOGIN_KEY,
-                  password: process.env.ECHO_PASSWORD_KEY,
+                  login: process.env.BOT_LOGIN,
+                  password: process.env.BOT_PASSWORD,
                   deviceId: "EchoBot_device",
                 },
               },
@@ -82,5 +82,5 @@ class EchoBot {
   }
 }
 
-const echoBot = new EchoBot(process.env.APP_SOCKET_CONNECT);
+const echoBot = new EchoBot(process.env.SERVER_ENDPOINT);
 echoBot.connect();
